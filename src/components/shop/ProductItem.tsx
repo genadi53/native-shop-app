@@ -6,7 +6,8 @@ import {
   Platform,
   StyleSheet,
   Text,
-  TouchableOpacityComponent,
+  TouchableNativeFeedback,
+  TouchableOpacity,
   View,
 } from "react-native";
 import React from "react";
@@ -24,8 +25,8 @@ export const ProductItem: React.FC<ProductItemProps> = ({
   onViewDetail,
   onAddToCart,
 }) => {
-  return (
-    <View style={styles.product}>
+  const content = (
+    <View>
       <View style={styles.imageContainer}>
         <Image style={styles.image} source={{ uri: product.imageUrl }} />
       </View>
@@ -42,9 +43,27 @@ export const ProductItem: React.FC<ProductItemProps> = ({
         <Button
           color={CustomColors.primary}
           title="To Cart"
-          onPress={() => {}}
+          onPress={() => {
+            console.log(Platform.Version);
+          }}
         />
       </View>
+    </View>
+  );
+
+  return (
+    <View style={styles.product}>
+      {Platform.OS === "android" && Platform.Version >= 21 ? (
+        <TouchableNativeFeedback
+          // style={styles.product}
+          onPress={onViewDetail}
+          useForeground
+        >
+          {content}
+        </TouchableNativeFeedback>
+      ) : (
+        <TouchableOpacity onPress={onViewDetail}>{content}</TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -83,12 +102,12 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   title: {
-    fontFamily: "open-sans-bold",
+    // fontFamily: "open-sans-bold",
     fontSize: 18,
     marginVertical: 2,
   },
   price: {
-    fontFamily: "open-sans",
+    // fontFamily: "open-sans",
     fontSize: 14,
     color: "#888",
   },
