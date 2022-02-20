@@ -1,8 +1,12 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { Platform } from "react-native";
 import { CustomColors } from "../constants/customColors";
+import ProductDetailsScreen from "../screens/shop/ProductDetailsScreen";
 import ProductOverviewScreen from "../screens/shop/ProductOverviewScreen";
-import { ProductsNavigatorParamList } from "./ProductsParamList";
+import {
+  ProductsNavigatorParamList,
+  ProductStackNavProps,
+} from "./ProductsParamList";
 
 const ProductsNavigator = createStackNavigator<ProductsNavigatorParamList>();
 
@@ -28,6 +32,13 @@ export const ProductStack: React.FC<ProductStackProps> = ({}) => {
           headerTitle: "All Products",
         }}
         component={ProductOverviewScreen}
+      />
+      <ProductsNavigator.Screen
+        name="ProductDetails"
+        options={({ route }: ProductStackNavProps<"ProductDetails">) => ({
+          headerTitle: `Product: ${route.params.id}`,
+        })}
+        component={ProductDetailsScreen}
       />
     </ProductsNavigator.Navigator>
   );

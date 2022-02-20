@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import Product from "../../models/product";
 import { ProductState } from "../../store/reducers/productReducer";
 import { ProductStackNavProps } from "../../navigation/ProductsParamList";
+import { ProductItem } from "../../components/shop/ProductItem";
 
 const ProductOverviewScreen = ({
   navigation,
@@ -18,7 +19,17 @@ const ProductOverviewScreen = ({
     <FlatList
       data={products}
       keyExtractor={(item, _idx) => item.id}
-      renderItem={(itemData) => <Text>{itemData.item.title}</Text>}
+      renderItem={(itemData) => (
+        <ProductItem
+          product={itemData.item}
+          onAddToCart={() => {}}
+          onViewDetail={() => {
+            navigation.navigate("ProductDetails", {
+              id: itemData.item.id,
+            });
+          }}
+        />
+      )}
     />
   );
 };
