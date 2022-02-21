@@ -47,11 +47,6 @@ export const CartReducer = (
           addedProduct.price
         );
       }
-      const items = { ...state.items, [addedProduct.id]: cartItem };
-      const t = state.totalAmount + addedProduct.price;
-      // console.log(t);
-      // console.log(items);
-      console.log(state);
 
       return {
         ...state,
@@ -59,6 +54,36 @@ export const CartReducer = (
         totalAmount: state.totalAmount + addedProduct.price,
       };
     }
+
+    case CartActions.REMOVE_FROM_CART: {
+      const productId: string = action.payload.productId;
+      const selectedCartItem: CartItem = state.items[productId];
+      const currentQuantity: number = selectedCartItem.quantity;
+
+      let updatedCartItems: {
+        [x: string]: CartItem;
+      } = {};
+      if (currentQuantity > 1) {
+        const updatedItem = new CartItem(
+          selectedCartItem.quantity - 1,
+          selectedCartItem.productPrice,
+          selectedCartItem.productTitle,
+          selectedCartItem.totalSum - selectedCartItem.productPrice
+        );
+
+        updatedCartItems = { ...state.items, [productId]: updatedItem };
+      } else {
+        updatedCartItems = { ...state.items };
+        delete updatedCartItems[productId];
+      }
+
+      return {
+        ...state,
+        items: updatedCartItems,
+        totalAmount: state.totalAmount - selectedCartItem.productPrice,
+      };
+    }
+
     default:
       return state;
   }

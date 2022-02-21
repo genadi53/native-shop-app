@@ -8,3 +8,7 @@ export const CartActions = {
 export const addToCart = (product: Product) => {
   return { type: CartActions.ADD_TO_CART, payload: { product } };
 };
+
+export const removeFromCart = (productId: string) => {
+  return { type: CartActions.REMOVE_FROM_CART, payload: { productId } };
+};

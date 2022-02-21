@@ -1,24 +1,17 @@
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  Button,
-  ScrollView,
-  Image,
-} from "react-native";
+import { Button, FlatList, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { CustomColors } from "../../constants/customColors";
-import Product from "../../models/product";
-import { ProductStackNavProps } from "../../navigation/ProductsParamList";
-import { CartState } from "../../store/reducers/cartReducer";
 import { CartItem } from "../../components/shop/CartItem";
+import { CustomColors } from "../../constants/customColors";
+import { ProductStackNavProps } from "../../navigation/ProductsParamList";
+import { removeFromCart } from "../../store/actions/cartActions";
+import { CartState } from "../../store/reducers/cartReducer";
 
 const CartScreen = ({
   navigation,
   route,
 }: ProductStackNavProps<"CartScreen">) => {
+  const dispatch = useDispatch();
   const totalAmount: number = useSelector(
     (state: { cart: CartState }) => state.cart.totalAmount
   );
@@ -34,7 +27,7 @@ const CartScreen = ({
         totalSum: state.cart.items[key].totalSum,
       });
     }
-    return cartItemsArray;
+    return cartItemsArray.sort((a, b) => (a.productId > b.productId ? 1 : -1));
   });
 
   return (
@@ -47,9 +40,7 @@ const CartScreen = ({
           color={CustomColors.secondary}
           title="Order Now"
           disabled={cartItems.length === 0}
-          onPress={() => {
-            // dispatch(ordersActions.addOrder(cartItems, cartTotalAmount));
-          }}
+          onPress={() => {}}
         />
       </View>
       <FlatList
@@ -61,7 +52,7 @@ const CartScreen = ({
             title={itemData.item.productTitle}
             amount={itemData.item.totalSum}
             onRemove={() => {
-              // dispatch(cartActions.removeFromCart(itemData.item.productId));
+              dispatch(removeFromCart(itemData.item.productId));
             }}
           />
         )}

@@ -25,7 +25,7 @@ export const CartItem: React.FC<CartItemProps> = ({
   return (
     <View style={styles.cartItem}>
       <View style={styles.itemData}>
-        <Text style={styles.quantity}>{quantity} </Text>
+        <Text style={styles.quantity}>{quantity}</Text>
         <Text style={styles.mainText}>{title}</Text>
       </View>
       <View style={styles.itemData}>
