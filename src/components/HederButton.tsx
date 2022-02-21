@@ -5,7 +5,7 @@ import {
   // AntDesign,
   // EvilIcons
 } from "@expo/vector-icons";
-import { CustomColors } from "../../constants/customColors";
+import { CustomColors } from "../constants/customColors";
 
 interface HeaderButtonProps {
   name: any;

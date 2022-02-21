@@ -1,8 +1,8 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { Platform } from "react-native";
-import { Button } from "react-native-paper";
-import { HeaderButton } from "../components/shop/HederButton";
+import { HeaderButton } from "../components/HederButton";
 import { CustomColors } from "../constants/customColors";
+import CartScreen from "../screens/shop/CartScreen";
 import ProductDetailsScreen from "../screens/shop/ProductDetailsScreen";
 import ProductOverviewScreen from "../screens/shop/ProductOverviewScreen";
 import {
@@ -18,7 +18,7 @@ export const ProductStack: React.FC<ProductStackProps> = ({}) => {
   return (
     <ProductsNavigator.Navigator
       initialRouteName="ProductOverview"
-      screenOptions={{
+      screenOptions={({ navigation }) => ({
         headerStyle: {
           backgroundColor:
             Platform.OS === "android" ? CustomColors.primary : "",
@@ -34,10 +34,12 @@ export const ProductStack: React.FC<ProductStackProps> = ({}) => {
         headerRight: () => (
           <HeaderButton
             name={Platform.OS === "android" ? "md-cart" : "ios-cart"}
-            onPress={() => {}}
+            onPress={() => {
+              navigation.navigate("CartScreen");
+            }}
           />
         ),
-      }}
+      })}
     >
       <ProductsNavigator.Screen
         name="ProductOverview"
@@ -53,6 +55,14 @@ export const ProductStack: React.FC<ProductStackProps> = ({}) => {
           headerTitle: `Product: ${route.params.id}`,
         })}
         component={ProductDetailsScreen}
+      />
+      <ProductsNavigator.Screen
+        name="CartScreen"
+        options={({ route }: ProductStackNavProps<"CartScreen">) => ({
+          headerTitle: "Cart",
+          // headerBackTitle: "All Products",
+        })}
+        component={CartScreen}
       />
     </ProductsNavigator.Navigator>
   );

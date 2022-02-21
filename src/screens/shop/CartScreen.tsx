@@ -13,8 +13,7 @@ import { CustomColors } from "../../constants/customColors";
 import Product from "../../models/product";
 import { ProductStackNavProps } from "../../navigation/ProductsParamList";
 import { CartState } from "../../store/reducers/cartReducer";
-
-interface CartScreenProps {}
+import { CartItem } from "../../components/shop/CartItem";
 
 const CartScreen = ({
   navigation,
@@ -24,9 +23,19 @@ const CartScreen = ({
     (state: { cart: CartState }) => state.cart.totalAmount
   );
 
-  const cartItems = useSelector(
-    (state: { cart: CartState }) => state.cart.items
-  );
+  const cartItems = useSelector((state: { cart: CartState }) => {
+    const cartItemsArray = [];
+    for (const key in state.cart.items) {
+      cartItemsArray.push({
+        productId: key,
+        productTitle: state.cart.items[key].productTitle,
+        productPrice: state.cart.items[key].productPrice,
+        quantity: state.cart.items[key].quantity,
+        totalSum: state.cart.items[key].totalSum,
+      });
+    }
+    return cartItemsArray;
+  });
 
   return (
     <View style={styles.screen}>
@@ -37,26 +46,26 @@ const CartScreen = ({
         <Button
           color={CustomColors.secondary}
           title="Order Now"
-          //   disabled={cartItems.length === 0}
+          disabled={cartItems.length === 0}
           onPress={() => {
             // dispatch(ordersActions.addOrder(cartItems, cartTotalAmount));
           }}
         />
       </View>
-      {/* <FlatList
+      <FlatList
         data={cartItems}
         keyExtractor={(item) => item.productId}
         renderItem={(itemData) => (
           <CartItem
             quantity={itemData.item.quantity}
             title={itemData.item.productTitle}
-            amount={itemData.item.sum}
+            amount={itemData.item.totalSum}
             onRemove={() => {
-              dispatch(cartActions.removeFromCart(itemData.item.productId));
+              // dispatch(cartActions.removeFromCart(itemData.item.productId));
             }}
           />
         )}
-      /> */}
+      />
     </View>
   );
 };
