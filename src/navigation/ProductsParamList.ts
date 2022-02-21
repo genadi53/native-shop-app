@@ -5,6 +5,7 @@ import { ProductDetailsParamList } from "./ProductParamList";
 export type ProductsNavigatorParamList = {
   ProductOverview: undefined;
   // ProductDetails: undefined;
+  CartScreen: undefined;
 } & ProductDetailsParamList;
 
 export type ProductStackNavProps<T extends keyof ProductsNavigatorParamList> = {

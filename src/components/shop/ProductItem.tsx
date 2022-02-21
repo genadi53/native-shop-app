@@ -44,7 +44,8 @@ export const ProductItem: React.FC<ProductItemProps> = ({
           color={CustomColors.primary}
           title="To Cart"
           onPress={() => {
-            console.log(Platform.Version);
+            // console.log(Platform.Version);
+            onAddToCart();
           }}
         />
       </View>
@@ -102,12 +103,12 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   title: {
-    // fontFamily: "open-sans-bold",
+    fontFamily: "open-sans-bold",
     fontSize: 18,
     marginVertical: 2,
   },
   price: {
-    // fontFamily: "open-sans",
+    fontFamily: "open-sans",
     fontSize: 14,
     color: "#888",
   },

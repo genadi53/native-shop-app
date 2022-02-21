@@ -8,10 +8,11 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { CustomColors } from "../../constants/customColors";
 import Product from "../../models/product";
 import { ProductStackNavProps } from "../../navigation/ProductsParamList";
+import { addToCart } from "../../store/actions/cartActions";
 import { ProductState } from "../../store/reducers/productReducer";
 
 interface ProductDetailsProps {}
@@ -20,6 +21,7 @@ const ProductDetailsScreen = ({
   navigation,
   route,
 }: ProductStackNavProps<"ProductDetails">) => {
+  const dispatch = useDispatch();
   const products: Product[] = useSelector(
     (state: { products: ProductState }) => {
       return state.products.availableProducts;
@@ -39,7 +41,10 @@ const ProductDetailsScreen = ({
           color={CustomColors.primary}
           title="Add to Cart"
           onPress={() => {
-            console.log(selectedProduct);
+            // console.log(selectedProduct);
+            if (selectedProduct) {
+              dispatch(addToCart(selectedProduct));
+            }
           }}
         />
       </View>
@@ -70,10 +75,10 @@ const styles = StyleSheet.create({
     color: "#888",
     textAlign: "center",
     marginVertical: 20,
-    // fontFamily: "open-sans-bold",
+    fontFamily: "open-sans-bold",
   },
   description: {
-    // fontFamily: "open-sans",
+    fontFamily: "open-sans",
     fontSize: 14,
     textAlign: "center",
     marginHorizontal: 20,
