@@ -39,6 +39,14 @@ export const ProductStack: React.FC<ProductStackProps> = ({}) => {
             }}
           />
         ),
+        headerLeft: () => (
+          <HeaderButton
+            name={Platform.OS === "android" ? "md-menu" : "ios-menu"}
+            onPress={() => {
+              navigation.openDrawer();
+            }}
+          />
+        ),
       })}
     >
       <ProductsNavigator.Screen

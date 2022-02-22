@@ -29,21 +29,28 @@ export const CartReducer = (
       let cartItem: CartItem | null = null;
 
       if (state.items[addedProduct.id]) {
-        const { quantity, productPrice, productTitle, totalSum }: CartItem =
-          state.items[addedProduct.id];
-
-        cartItem = new CartItem(
-          quantity + 1,
+        const {
+          productId,
+          quantity,
           productPrice,
           productTitle,
+          totalSum,
+        }: CartItem = state.items[addedProduct.id];
+
+        cartItem = new CartItem(
+          productId,
+          productTitle,
+          productPrice,
+          quantity + 1,
           totalSum + productPrice
           //   quantity * productPrice
         );
       } else {
         cartItem = new CartItem(
-          1,
-          addedProduct.price,
+          addedProduct.id,
           addedProduct.title,
+          addedProduct.price,
+          1,
           addedProduct.price
         );
       }
@@ -65,9 +72,10 @@ export const CartReducer = (
       } = {};
       if (currentQuantity > 1) {
         const updatedItem = new CartItem(
-          selectedCartItem.quantity - 1,
-          selectedCartItem.productPrice,
+          selectedCartItem.productId,
           selectedCartItem.productTitle,
+          selectedCartItem.productPrice,
+          selectedCartItem.quantity - 1,
           selectedCartItem.totalSum - selectedCartItem.productPrice
         );
 

@@ -1,10 +1,12 @@
 import React from "react";
 import { Button, FlatList, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { CartItem } from "../../components/shop/CartItem";
+import { CartItem as CartItemComponent } from "../../components/shop/CartItem";
 import { CustomColors } from "../../constants/customColors";
+import CartItem from "../../models/cartItem";
 import { ProductStackNavProps } from "../../navigation/ProductsParamList";
 import { removeFromCart } from "../../store/actions/cartActions";
+import { OrderActions, addToCart } from "../../store/actions/orderActions";
 import { CartState } from "../../store/reducers/cartReducer";
 
 const CartScreen = ({
@@ -17,7 +19,7 @@ const CartScreen = ({
   );
 
   const cartItems = useSelector((state: { cart: CartState }) => {
-    const cartItemsArray = [];
+    const cartItemsArray: CartItem[] = [];
     for (const key in state.cart.items) {
       cartItemsArray.push({
         productId: key,
@@ -40,14 +42,16 @@ const CartScreen = ({
           color={CustomColors.secondary}
           title="Order Now"
           disabled={cartItems.length === 0}
-          onPress={() => {}}
+          onPress={() => {
+            dispatch(addToCart(cartItems, totalAmount));
+          }}
         />
       </View>
       <FlatList
         data={cartItems}
-        keyExtractor={(item) => item.productId}
+        keyExtractor={(item, _idx) => item.productId}
         renderItem={(itemData) => (
-          <CartItem
+          <CartItemComponent
             quantity={itemData.item.quantity}
             title={itemData.item.productTitle}
             amount={itemData.item.totalSum}
