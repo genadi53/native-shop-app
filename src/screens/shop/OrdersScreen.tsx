@@ -6,6 +6,7 @@ import { CustomColors } from "../../constants/customColors";
 import Order from "../../models/order";
 import { OrderStackNavProps } from "../../navigation/OrdersParamList";
 import { OrdersState } from "../../store/reducers/orderReducer";
+import { OrderItem } from "../../components/shop/OrderItem";
 
 const OrdersScreen = ({ navigation, route }: OrderStackNavProps<"Orders">) => {
   const orders = useSelector((state: { orders: OrdersState }) => {
@@ -14,13 +15,11 @@ const OrdersScreen = ({ navigation, route }: OrderStackNavProps<"Orders">) => {
 
   return (
     <View>
-      <Text>Orders!!!</Text>
       <FlatList
         data={orders}
         keyExtractor={(item, _idx) => item.id}
         renderItem={(itemData: { item: Order }) => {
-          console.log(itemData.item);
-          return <Text>{itemData.item.totalAmount}</Text>;
+          return <OrderItem order={itemData.item} />;
         }}
       />
     </View>

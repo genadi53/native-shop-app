@@ -1,6 +1,7 @@
 import CartItem from "../../models/cartItem";
 import Product from "../../models/product";
 import { CartActions } from "../actions/cartActions";
+import { OrderActions } from "../actions/orderActions";
 
 // export interface StoredCartItems {
 //   [key: string]: CartItem;
@@ -90,6 +91,10 @@ export const CartReducer = (
         items: updatedCartItems,
         totalAmount: state.totalAmount - selectedCartItem.productPrice,
       };
+    }
+
+    case OrderActions.ADD_ORDER: {
+      return initialState;
     }
 
     default:

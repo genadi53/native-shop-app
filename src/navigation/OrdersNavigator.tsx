@@ -36,7 +36,7 @@ export const OrdersStack: React.FC = ({}) => {
           <HeaderButton
             name={Platform.OS === "android" ? "md-menu" : "ios-menu"}
             onPress={() => {
-              navigation.openDrawer();
+              navigation.toggleDrawer();
             }}
           />
         ),

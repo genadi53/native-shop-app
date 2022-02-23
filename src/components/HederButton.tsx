@@ -16,13 +16,14 @@ interface HeaderButtonProps {
 
 export const HeaderButton: React.FC<HeaderButtonProps> = ({
   name,
-  size = 23,
+  size = 25,
   // color,
   onPress,
 }) => {
   return (
     // <TouchableOpacity></TouchableOpacity>
     <Ionicons
+      style={{ marginHorizontal: 5 }}
       name={name}
       size={size}
       color={Platform.OS === "android" ? "white" : CustomColors.primary}
