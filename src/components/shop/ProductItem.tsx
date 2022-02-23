@@ -12,43 +12,23 @@ import {
 } from "react-native";
 import React from "react";
 import Product from "../../models/product";
-import { CustomColors } from "../../constants/customColors";
 
 interface ProductItemProps {
   product: Product;
-  onViewDetail: (ev: NativeSyntheticEvent<NativeTouchEvent>) => void;
-  onAddToCart: Function;
+  onSelect: (ev: NativeSyntheticEvent<NativeTouchEvent>) => void;
 }
 
-export const ProductItem: React.FC<ProductItemProps> = ({
-  product,
-  onViewDetail,
-  onAddToCart,
-}) => {
+export const ProductItem: React.FC<ProductItemProps> = (props) => {
   const content = (
     <View>
       <View style={styles.imageContainer}>
-        <Image style={styles.image} source={{ uri: product.imageUrl }} />
+        <Image style={styles.image} source={{ uri: props.product.imageUrl }} />
       </View>
       <View style={styles.details}>
-        <Text style={styles.title}>{product.title}</Text>
-        <Text style={styles.price}>${product.price.toFixed(2)}</Text>
+        <Text style={styles.title}>{props.product.title}</Text>
+        <Text style={styles.price}>${props.product.price.toFixed(2)}</Text>
       </View>
-      <View style={styles.actions}>
-        <Button
-          color={CustomColors.primary}
-          title="View Details"
-          onPress={onViewDetail}
-        />
-        <Button
-          color={CustomColors.primary}
-          title="To Cart"
-          onPress={() => {
-            // console.log(Platform.Version);
-            onAddToCart();
-          }}
-        />
-      </View>
+      <View style={styles.actions}>{props.children}</View>
     </View>
   );
 
@@ -57,13 +37,13 @@ export const ProductItem: React.FC<ProductItemProps> = ({
       {Platform.OS === "android" && Platform.Version >= 21 ? (
         <TouchableNativeFeedback
           // style={styles.product}
-          onPress={onViewDetail}
+          onPress={props.onSelect}
           useForeground
         >
           {content}
         </TouchableNativeFeedback>
       ) : (
-        <TouchableOpacity onPress={onViewDetail}>{content}</TouchableOpacity>
+        <TouchableOpacity onPress={props.onSelect}>{content}</TouchableOpacity>
       )}
     </View>
   );

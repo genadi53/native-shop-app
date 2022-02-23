@@ -44,6 +44,7 @@ const CartScreen = ({
           disabled={cartItems.length === 0}
           onPress={() => {
             dispatch(addToCart(cartItems, totalAmount));
+            navigation.navigate("ProductOverview");
           }}
         />
       </View>

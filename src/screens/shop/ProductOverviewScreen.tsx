@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import { StyleSheet, Text, View, FlatList, Button } from "react-native";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Product from "../../models/product";
@@ -6,6 +6,7 @@ import { ProductState } from "../../store/reducers/productReducer";
 import { ProductStackNavProps } from "../../navigation/ProductsParamList";
 import { ProductItem } from "../../components/shop/ProductItem";
 import { addToCart } from "../../store/actions/cartActions";
+import { CustomColors } from "../../constants/customColors";
 
 const ProductOverviewScreen = ({
   navigation,
@@ -24,16 +25,30 @@ const ProductOverviewScreen = ({
       renderItem={(itemData) => (
         <ProductItem
           product={itemData.item}
-          onAddToCart={() => {
-            // console.log(itemData.item);
-            dispatch(addToCart(itemData.item));
-          }}
-          onViewDetail={() => {
+          onSelect={() => {
             navigation.navigate("ProductDetails", {
               id: itemData.item.id,
             });
           }}
-        />
+        >
+          <Button
+            color={CustomColors.primary}
+            title="View Details"
+            onPress={() => {
+              navigation.navigate("ProductDetails", {
+                id: itemData.item.id,
+              });
+            }}
+          />
+
+          <Button
+            color={CustomColors.primary}
+            title="To Cart"
+            onPress={() => {
+              dispatch(addToCart(itemData.item));
+            }}
+          />
+        </ProductItem>
       )}
     />
   );

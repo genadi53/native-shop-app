@@ -30,9 +30,9 @@ export const OrderItem: React.FC<OrderItemProps> = (props) => {
 
       {showDetails && (
         <View style={styles.detailItems}>
-          {props.order.items.map((cartItem: CartItem) => (
+          {props.order.items.map((cartItem: CartItem, _idx) => (
             <CartItemComponent
-              key={cartItem.productId}
+              key={`${cartItem.productId}`}
               quantity={cartItem.quantity}
               amount={cartItem.totalSum}
               title={cartItem.productTitle}

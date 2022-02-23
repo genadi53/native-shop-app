@@ -1,19 +1,17 @@
 import { Platform } from "react-native";
-import { HeaderButton } from "../components/HederButton";
 import { CustomColors } from "../constants/customColors";
-import { OrdersNavigatorParamList } from "./OrdersParamList";
-import OrdersScreen from "../screens/shop/OrdersScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { ProductStack } from "./ProductsNavigator";
 import { OrdersStack } from "./OrdersNavigator";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { UsersStack } from "./UserNavigator";
 
 const ShopNavigator = createDrawerNavigator();
 
 export type ShopDrawerParamList = {
   Products: undefined;
   Order: undefined;
-  Admin: undefined;
+  Users: undefined;
 };
 
 export const ShopDrawer: React.FC = ({}) => {
@@ -41,12 +39,22 @@ export const ShopDrawer: React.FC = ({}) => {
         name="Order"
         component={OrdersStack}
         options={{
+          title: "Orders",
           drawerIcon: ({ color }) => (
             <Ionicons
               name={Platform.OS === "android" ? "md-list" : "ios-list"}
               size={23}
               color={color}
             />
+          ),
+        }}
+      />
+      <ShopNavigator.Screen
+        name="Users"
+        component={UsersStack}
+        options={{
+          drawerIcon: ({ color }) => (
+            <FontAwesome5 name="user-tag" size={20} color={color} />
           ),
         }}
       />
