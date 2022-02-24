@@ -4,6 +4,7 @@ import { RouteProp } from "@react-navigation/native";
 export type ProductDetailsParamList = {
   ProductDetails: {
     id: string;
+    title: string;
   };
 };
 

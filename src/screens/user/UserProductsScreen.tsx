@@ -5,6 +5,7 @@ import { ProductItem } from "../../components/shop/ProductItem";
 import { CustomColors } from "../../constants/customColors";
 import Product from "../../models/product";
 import { UserstackNavProps } from "../../navigation/UsersParamList";
+import { deleteProduct } from "../../store/actions/productActions";
 import { ProductState } from "../../store/reducers/productReducer";
 
 const UserProductsScreen = ({
@@ -16,21 +17,47 @@ const UserProductsScreen = ({
   );
   const dispatch = useDispatch();
 
+  const editProductHandler = (id: string, title: string) => {
+    navigation.navigate("EditProduct", { id, title });
+  };
+
+  const deleteHandler = (id: string) => {
+    Alert.alert("Are you sure?", "Do you really want to delete this item?", [
+      { text: "No", style: "default" },
+      {
+        text: "Yes",
+        style: "destructive",
+        onPress: () => {
+          dispatch(deleteProduct(id));
+        },
+      },
+    ]);
+  };
+
   return (
     <FlatList
       data={userProducts}
       keyExtractor={(item) => item.id}
       renderItem={(itemData: { item: Product }) => (
-        <ProductItem product={itemData.item} onSelect={() => {}}>
+        <ProductItem
+          product={itemData.item}
+          onSelect={() => {
+            editProductHandler(itemData.item.id, itemData.item.title);
+          }}
+        >
           <Button
             color={CustomColors.primary}
             title="Edit"
-            onPress={() => {}}
+            onPress={() => {
+              editProductHandler(itemData.item.id, itemData.item.title);
+            }}
           />
           <Button
             color={CustomColors.primary}
             title="Delete"
-            onPress={() => {}}
+            onPress={() => {
+              dispatch(deleteProduct(itemData.item.id));
+            }}
           />
         </ProductItem>
       )}

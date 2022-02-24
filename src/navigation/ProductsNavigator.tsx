@@ -60,7 +60,7 @@ export const ProductStack: React.FC<ProductStackProps> = ({}) => {
       <ProductsNavigator.Screen
         name="ProductDetails"
         options={({ route }: ProductStackNavProps<"ProductDetails">) => ({
-          headerTitle: `Product: ${route.params.id}`,
+          headerTitle: `${route.params.title}`,
         })}
         component={ProductDetailsScreen}
       />

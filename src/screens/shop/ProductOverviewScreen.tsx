@@ -28,6 +28,7 @@ const ProductOverviewScreen = ({
           onSelect={() => {
             navigation.navigate("ProductDetails", {
               id: itemData.item.id,
+              title: itemData.item.title,
             });
           }}
         >
@@ -37,6 +38,7 @@ const ProductOverviewScreen = ({
             onPress={() => {
               navigation.navigate("ProductDetails", {
                 id: itemData.item.id,
+                title: itemData.item.title,
               });
             }}
           />

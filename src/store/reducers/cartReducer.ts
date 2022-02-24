@@ -2,6 +2,7 @@ import CartItem from "../../models/cartItem";
 import Product from "../../models/product";
 import { CartActions } from "../actions/cartActions";
 import { OrderActions } from "../actions/orderActions";
+import { ProductActions } from "../actions/productActions";
 
 // export interface StoredCartItems {
 //   [key: string]: CartItem;
@@ -95,6 +96,23 @@ export const CartReducer = (
 
     case OrderActions.ADD_ORDER: {
       return initialState;
+    }
+
+    case ProductActions.DELETE_PRODUCT: {
+      if (!state.items[action.payload.productId]) {
+        return state;
+      }
+      const updatedCartItems: {
+        [x: string]: CartItem;
+      } = { ...state.items };
+      const itemTotal = state.items[action.payload.productId].totalSum;
+      delete updatedCartItems[action.payload.productId];
+
+      return {
+        ...state,
+        items: updatedCartItems,
+        totalAmount: state.totalAmount - itemTotal,
+      };
     }
 
     default:

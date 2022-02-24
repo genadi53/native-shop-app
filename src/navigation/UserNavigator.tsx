@@ -2,6 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Platform } from "react-native";
 import { HeaderButton } from "../components/HederButton";
 import { CustomColors } from "../constants/customColors";
+import CreateProductScreen from "../screens/user/CreateProduct";
 import EditProductScreen from "../screens/user/EditProductScreen";
 import UserProductsScreen from "../screens/user/UserProductsScreen";
 import { UsersNavigatorParamList, UserstackNavProps } from "./UsersParamList";
@@ -29,7 +30,7 @@ export const UsersStack: React.FC = ({}) => {
           <HeaderButton
             name={Platform.OS === "android" ? "md-create" : "ios-create"}
             onPress={() => {
-              navigation.navigate("EditProduct");
+              navigation.navigate("CreateProduct");
             }}
           />
         ),
@@ -53,10 +54,51 @@ export const UsersStack: React.FC = ({}) => {
 
       <UsersNavigator.Screen
         name="EditProduct"
-        // options={({ route }: UserstackNavProps<"EditProduct">) => ({
-        //   headerTitle: `Edit Product: ${route.params.id}`,
-        // })}
-        component={EditProductScreen as any}
+        options={({ route, navigation }: UserstackNavProps<"EditProduct">) => {
+          const headerTitle = route.params
+            ? `Edit ${route.params.title}`
+            : "Add Product";
+          return {
+            headerTitle: headerTitle,
+            headerRight: () => (
+              <HeaderButton
+                name={
+                  Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"
+                }
+                onPress={() => {
+                  if (route.params && route.params.submit) {
+                    route.params.submit(); //.current();
+                  }
+                }}
+              />
+            ),
+          };
+        }}
+        component={EditProductScreen}
+      />
+      <UsersNavigator.Screen
+        name="CreateProduct"
+        options={({
+          route,
+          navigation,
+        }: UserstackNavProps<"CreateProduct">) => {
+          return {
+            headerTitle: "Add New Product",
+            headerRight: () => (
+              <HeaderButton
+                name={
+                  Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"
+                }
+                onPress={() => {
+                  if (route.params && route.params.submit) {
+                    route.params.submit();
+                  }
+                }}
+              />
+            ),
+          };
+        }}
+        component={CreateProductScreen}
       />
     </UsersNavigator.Navigator>
   );
