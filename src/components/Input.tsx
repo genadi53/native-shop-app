@@ -5,6 +5,7 @@ type InputState = {
   value: string;
   isValid: boolean;
   touched: boolean;
+  // onInputChange: Function;
 };
 
 const InputActions = {

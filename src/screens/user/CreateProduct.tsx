@@ -1,68 +1,143 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import React, { useCallback, useEffect, useReducer, useState } from "react";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { useDispatch } from "react-redux";
+import Input from "../../components/Input";
 import { UserstackNavProps } from "../../navigation/UsersParamList";
 import { createProduct } from "../../store/actions/productActions";
+import { formReducer, FormState, FORM_UPDATE } from "./formReducer";
 
 const CreateProductScreen = ({
   navigation,
   route,
 }: UserstackNavProps<"CreateProduct">) => {
   const dispatch = useDispatch();
-  const [title, setTitle] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [price, setPrice] = useState("");
-  const [description, setDescription] = useState("");
+  const initialState: FormState = {
+    inputValues: {
+      title: "",
+      imageUrl: "",
+      description: "",
+      price: "",
+    },
+    inputValuesValidity: {
+      title: false,
+      imageUrl: false,
+      description: false,
+      price: false,
+    },
+    isFormValid: false,
+  };
+  const [formState, dispatchFormState] = useReducer(formReducer, initialState);
 
   const onSubmit = useCallback(() => {
-    dispatch(createProduct(title, description, imageUrl, +price));
+    if (!formState.isFormValid) {
+      // alert("Wrong")
+      Alert.alert("Wrong Input", "Check the errors in the form.", [
+        { text: "Ok", style: "default" },
+      ]);
+      return;
+    }
+    dispatch(
+      createProduct(
+        formState.inputValues.title,
+        formState.inputValues.description,
+        formState.inputValues.imageUrl,
+        parseFloat(formState.inputValues.price)
+      )
+    );
+
     navigation.goBack();
-  }, [dispatch, title, description, imageUrl, price]);
+  }, [dispatch, formState]);
+
+  const textChangeHandler = useCallback(
+    (inputIdentifier: string, text: string, inputValidity: boolean) => {
+      dispatchFormState({
+        type: FORM_UPDATE,
+        payload: {
+          input: inputIdentifier,
+          isValid: inputValidity,
+          value: text,
+        },
+      });
+    },
+    [dispatchFormState]
+  );
 
   useEffect(() => {
     navigation.setParams({ submit: onSubmit });
   }, [onSubmit]);
 
   return (
-    <ScrollView>
-      <View style={styles.form}>
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Title</Text>
-          <TextInput
-            style={styles.input}
-            value={title}
-            onChangeText={(text) => setTitle(text)}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior="padding"
+      keyboardVerticalOffset={100}
+    >
+      <ScrollView>
+        <View style={styles.form}>
+          <Input
+            id="title"
+            label="Title"
+            errorText="Please enter a valid title!"
+            keyboardType="default"
+            autoCapitalize="sentences"
+            autoCorrect
+            returnKeyType="next"
+            onInputChange={textChangeHandler}
+            initialValue={""}
+            initiallyValid={false}
+            required
           />
-        </View>
+          <Input
+            id="imageUrl"
+            label="Image Url"
+            errorText="Please enter a valid image url!"
+            keyboardType="default"
+            returnKeyType="next"
+            onInputChange={textChangeHandler}
+            initialValue={""}
+            initiallyValid={false}
+            required
+          />
 
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Image URL</Text>
-          <TextInput
-            style={styles.input}
-            value={imageUrl}
-            onChangeText={(text) => setImageUrl(text)}
+          <Input
+            id="price"
+            label="Price"
+            errorText="Please enter a valid price!"
+            keyboardType="decimal-pad"
+            returnKeyType="next"
+            onInputChange={textChangeHandler}
+            required
+            initialValue={"0"}
+            initiallyValid={false}
+            min={0.1}
           />
-        </View>
 
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Price</Text>
-          <TextInput
-            style={styles.input}
-            value={price}
-            onChangeText={(text) => setPrice(text)}
+          <Input
+            id="description"
+            label="Description"
+            errorText="Please enter a valid description!"
+            keyboardType="default"
+            autoCapitalize="sentences"
+            autoCorrect
+            multiline
+            numberOfLines={3}
+            onInputChange={textChangeHandler}
+            initialValue={""}
+            initiallyValid={false}
+            required
+            minLength={5}
           />
         </View>
-
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Description</Text>
-          <TextInput
-            style={styles.input}
-            value={description}
-            onChangeText={(text) => setDescription(text)}
-          />
-        </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

@@ -22,17 +22,20 @@ const UserProductsScreen = ({
   };
 
   const deleteHandler = (id: string) => {
-    console.log("yo");
-    Alert.alert("Are you sure?", "Do you really want to delete this item?", [
-      { text: "No", style: "default" },
-      {
-        text: "Yes",
-        style: "destructive",
-        onPress: () => {
-          dispatch(deleteProduct(id));
+    if (Platform.OS === "web") {
+      dispatch(deleteProduct(id));
+    } else {
+      Alert.alert("Are you sure?", "Do you really want to delete this item?", [
+        { text: "No", style: "default" },
+        {
+          text: "Yes",
+          style: "destructive",
+          onPress: () => {
+            dispatch(deleteProduct(id));
+          },
         },
-      },
-    ]);
+      ]);
+    }
   };
 
   return (

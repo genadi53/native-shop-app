@@ -31,7 +31,7 @@ export const formReducer = (
       ...state.inputValuesValidity,
       [action.payload.input]: action.payload.isValid,
     };
-    console.log(updatedInputValuesValidity);
+    // console.log(updatedInputValuesValidity);
 
     let formIsValid: boolean = true;
     for (const key in updatedInputValuesValidity) {
