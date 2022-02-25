@@ -22,6 +22,7 @@ const UserProductsScreen = ({
   };
 
   const deleteHandler = (id: string) => {
+    console.log("yo");
     Alert.alert("Are you sure?", "Do you really want to delete this item?", [
       { text: "No", style: "default" },
       {
@@ -56,7 +57,8 @@ const UserProductsScreen = ({
             color={CustomColors.primary}
             title="Delete"
             onPress={() => {
-              dispatch(deleteProduct(itemData.item.id));
+              // dispatch(deleteProduct(itemData.item.id));
+              deleteHandler(itemData.item.id);
             }}
           />
         </ProductItem>

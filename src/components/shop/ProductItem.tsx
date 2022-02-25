@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import React from "react";
 import Product from "../../models/product";
+import Card from "../Card";
 
 interface ProductItemProps {
   product: Product;
@@ -33,7 +34,7 @@ export const ProductItem: React.FC<ProductItemProps> = (props) => {
   );
 
   return (
-    <View style={styles.product}>
+    <Card style={styles.product}>
       {Platform.OS === "android" && Platform.Version >= 21 ? (
         <TouchableNativeFeedback
           // style={styles.product}
@@ -45,19 +46,12 @@ export const ProductItem: React.FC<ProductItemProps> = (props) => {
       ) : (
         <TouchableOpacity onPress={props.onSelect}>{content}</TouchableOpacity>
       )}
-    </View>
+    </Card>
   );
 };
 
 const styles = StyleSheet.create({
   product: {
-    shadowColor: "black",
-    shadowOpacity: 0.26,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    elevation: 5,
-    borderRadius: 10,
-    backgroundColor: "white",
     height: 300,
     margin: 20,
   },

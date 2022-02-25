@@ -19,6 +19,7 @@ export const ShopDrawer: React.FC = ({}) => {
     <ShopNavigator.Navigator
       screenOptions={{
         header: () => null,
+        // drawerPosition: 'right',
         drawerActiveTintColor: CustomColors.primary,
       }}
     >

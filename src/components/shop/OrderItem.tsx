@@ -4,6 +4,7 @@ import { CartItem as CartItemComponent } from "./CartItem";
 import CartItem from "../../models/cartItem";
 import { CustomColors } from "../../constants/customColors";
 import Order from "../../models/order";
+import Card from "../Card";
 
 interface OrderItemProps {
   order: Order;
@@ -13,7 +14,7 @@ export const OrderItem: React.FC<OrderItemProps> = (props) => {
   const [showDetails, setShowDetails] = useState(false);
 
   return (
-    <View style={styles.orderItem}>
+    <Card style={styles.orderItem}>
       <View style={styles.summary}>
         <Text style={styles.totalAmount}>
           ${props.order.totalAmount.toFixed(2)}
@@ -40,7 +41,7 @@ export const OrderItem: React.FC<OrderItemProps> = (props) => {
           ))}
         </View>
       )}
-    </View>
+    </Card>
   );
 };
 

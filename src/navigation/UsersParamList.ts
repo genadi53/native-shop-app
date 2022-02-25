@@ -5,10 +5,10 @@ export type ProductParamList = {
   EditProduct: {
     id: string;
     title: string;
-    submit: Function; //React.MutableRefObject<() => void>;
+    submit?: Function; //React.MutableRefObject<() => void>;
   };
   CreateProduct: {
-    submit: Function; //React.MutableRefObject<() => void>;
+    submit?: Function; //React.MutableRefObject<() => void>;
   };
 };
 
