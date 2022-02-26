@@ -17,6 +17,15 @@ export const ProductReducer = (
   action: { type: string; payload: any }
 ) => {
   switch (action.type) {
+    case ProductActions.SET_PRODUCTS: {
+      return {
+        availableProducts: action.payload.products,
+        userProducts: state.userProducts.filter(
+          (product: Product) => product.ownerId === "u1"
+        ),
+      };
+    }
+
     case ProductActions.DELETE_PRODUCT: {
       return {
         ...state,
@@ -31,7 +40,9 @@ export const ProductReducer = (
 
     case ProductActions.CREATE_PRODUCT: {
       const newProduct = new Product(
-        new Date().toString(),
+        action.payload.productData.id
+          ? action.payload.productData.id
+          : new Date().toString(),
         "u1",
         action.payload.productData.title,
         action.payload.productData.imageUrl,

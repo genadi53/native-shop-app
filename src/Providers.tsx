@@ -1,6 +1,5 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { Provider } from "react-redux";
-import { ProductStack } from "./navigation/ProductsNavigator";
 import { ShopDrawer } from "./navigation/ShopNavigator";
 import { store } from "./store/rootReducer";
 
