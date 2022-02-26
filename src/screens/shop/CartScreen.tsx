@@ -1,5 +1,13 @@
-import React from "react";
-import { Button, FlatList, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Button,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import Card from "../../components/Card";
 import { CartItem as CartItemComponent } from "../../components/shop/CartItem";
@@ -7,7 +15,7 @@ import { CustomColors } from "../../constants/customColors";
 import CartItem from "../../models/cartItem";
 import { ProductStackNavProps } from "../../navigation/ProductsParamList";
 import { removeFromCart } from "../../store/actions/cartActions";
-import { OrderActions, addToCart } from "../../store/actions/orderActions";
+import { OrderActions, addOrder } from "../../store/actions/orderActions";
 import { CartState } from "../../store/reducers/cartReducer";
 
 const CartScreen = ({
@@ -33,21 +41,43 @@ const CartScreen = ({
     return cartItemsArray.sort((a, b) => (a.productId > b.productId ? 1 : -1));
   });
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | undefined>(undefined);
+
+  const createOrderHandler = async () => {
+    setIsLoading(true);
+    try {
+      await dispatch(addOrder(cartItems, totalAmount));
+    } catch (err: any) {
+      setError(err.message);
+    }
+    setIsLoading(true);
+    navigation.navigate("ProductOverview");
+  };
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An error occurred!", error, [{ text: "Okay" }]);
+    }
+  }, [error]);
+
   return (
-    <View style={styles.screen}>
+    <View style={{ margin: 20 }}>
       <Card style={styles.summary}>
         <Text style={styles.summaryText}>
           Total: <Text style={styles.amount}>${totalAmount.toFixed(2)}</Text>
         </Text>
-        <Button
-          color={CustomColors.secondary}
-          title="Order Now"
-          disabled={cartItems.length === 0}
-          onPress={() => {
-            dispatch(addToCart(cartItems, totalAmount));
-            navigation.navigate("ProductOverview");
-          }}
-        />
+
+        {isLoading ? (
+          <ActivityIndicator size="large" color={CustomColors.primary} />
+        ) : (
+          <Button
+            color={CustomColors.secondary}
+            title="Order Now"
+            disabled={cartItems.length === 0}
+            onPress={createOrderHandler}
+          />
+        )}
       </Card>
       <FlatList
         data={cartItems}
@@ -71,7 +101,9 @@ export default CartScreen;
 
 const styles = StyleSheet.create({
   screen: {
-    margin: 20,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   summary: {
     flexDirection: "row",

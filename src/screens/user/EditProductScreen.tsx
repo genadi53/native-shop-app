@@ -8,15 +8,17 @@ import React, {
 import {
   View,
   ScrollView,
-  Text,
-  TextInput,
   StyleSheet,
   Platform,
   Alert,
   KeyboardAvoidingView,
+  Text,
+  Button,
+  ActivityIndicator,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import Input from "../../components/Input";
+import { CustomColors } from "../../constants/customColors";
 import Product from "../../models/product";
 import { UserstackNavProps } from "../../navigation/UsersParamList";
 import { updateProduct } from "../../store/actions/productActions";
@@ -54,8 +56,10 @@ const EditProductScreen = ({
     isFormValid: editedProduct ? true : false,
   };
   const [formState, dispatchFormState] = useReducer(formReducer, initialState);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | undefined>(undefined);
 
-  const onSubmit = useCallback(() => {
+  const onSubmit = useCallback(async () => {
     if (!formState.isFormValid) {
       // alert("Wrong")
       Alert.alert("Wrong Input", "Check the errors in the form.", [
@@ -63,16 +67,23 @@ const EditProductScreen = ({
       ]);
       return;
     }
+    setIsLoading(true);
     if (editedProduct) {
-      dispatch(
-        updateProduct(
-          productId,
-          formState.inputValues.title,
-          formState.inputValues.description,
-          formState.inputValues.imageUrl
-        )
-      );
+      try {
+        await dispatch(
+          updateProduct(
+            productId,
+            formState.inputValues.title,
+            editedProduct.price,
+            formState.inputValues.description,
+            formState.inputValues.imageUrl
+          )
+        );
+      } catch (err: any) {
+        setError(err.message);
+      }
     }
+    setIsLoading(false);
     navigation.goBack();
   }, [dispatch, productId, formState]);
 
@@ -91,6 +102,12 @@ const EditProductScreen = ({
   // };
 
   useEffect(() => {
+    if (error) {
+      Alert.alert("An error occurred!", error, [{ text: "Okay" }]);
+    }
+  }, [error]);
+
+  useEffect(() => {
     navigation.setParams({ submit: onSubmit });
   }, [onSubmit]);
 
@@ -107,6 +124,17 @@ const EditProductScreen = ({
     },
     [dispatchFormState]
   );
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An error occurred!", error, [{ text: "Okay" }]);
+    }
+  }, [error]);
+
+  if (isLoading) {
+    <View style={styles.screen}>
+      <ActivityIndicator size="large" color={CustomColors.primary} />
+    </View>;
+  }
 
   return (
     <KeyboardAvoidingView
@@ -177,18 +205,10 @@ const styles = StyleSheet.create({
   form: {
     margin: 20,
   },
-  formControl: {
-    width: "100%",
-  },
-  label: {
-    fontFamily: "open-sans-bold",
-    marginVertical: 8,
-  },
-  input: {
-    paddingHorizontal: 2,
-    paddingVertical: 5,
-    borderBottomColor: "#ccc",
-    borderBottomWidth: 1,
+  screen: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

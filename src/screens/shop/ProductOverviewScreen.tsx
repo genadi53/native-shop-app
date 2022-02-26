@@ -25,19 +25,19 @@ const ProductOverviewScreen = ({
       return state.products.availableProducts;
     }
   );
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
 
   const loadProducts = useCallback(async () => {
     setError(undefined);
-    setIsLoading(true);
+    setIsRefreshing(true);
     try {
       await dispatch(fetchProducts());
     } catch (err: any) {
       setError(err.message);
     }
-    setIsLoading(false);
-  }, [dispatch, setIsLoading, setError]);
+  }, [dispatch, setIsRefreshing, setError]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -46,13 +46,13 @@ const ProductOverviewScreen = ({
     });
   }, [dispatch, loadProducts]);
 
-  useEffect(() => {
-    const focusSub: any = navigation.addListener("focus", loadProducts);
-
-    return () => {
-      focusSub.remove();
-    };
-  }, [loadProducts]);
+  // useEffect(() => {
+  //   const focusSub: any = navigation.addListener("focus", loadProducts);
+  //   const willFocusSub = navigation.addListener("willFocus", loadProducts);
+  //   return () => {
+  //     willFocusSub.remove();
+  //   };
+  // }, [loadProducts]);
 
   if (error) {
     <View style={styles.screen}>
@@ -79,6 +79,8 @@ const ProductOverviewScreen = ({
 
   return (
     <FlatList
+      onRefresh={loadProducts}
+      refreshing={isRefreshing}
       data={products}
       keyExtractor={(item, _idx) => item.id}
       renderItem={(itemData) => (

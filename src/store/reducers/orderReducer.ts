@@ -23,25 +23,24 @@ export const OrdersReducer = (
   switch (action.type) {
     case OrderActions.ADD_ORDER: {
       const newOrder = new Order(
-        new Date().toLocaleDateString("en-En", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
+        action.payload.id,
         action.payload.cartItems,
-        new Date().toLocaleDateString("en-En", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
+        action.payload.date,
+        // new Date().toLocaleDateString("en-En", {
+        //   year: "numeric",
+        //   month: "long",
+        //   day: "numeric",
+        //   hour: "2-digit",
+        //   minute: "2-digit",
+        // }),
         action.payload.totalAmount
       );
 
       return { ...state, orders: state.orders.concat(newOrder) };
+    }
+
+    case OrderActions.SET_ORDERS: {
+      return { ...state, orders: action.payload.orders };
     }
 
     default:

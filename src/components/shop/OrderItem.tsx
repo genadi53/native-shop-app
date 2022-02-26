@@ -13,6 +13,8 @@ interface OrderItemProps {
 export const OrderItem: React.FC<OrderItemProps> = (props) => {
   const [showDetails, setShowDetails] = useState(false);
 
+  // console.log(props.order);
+
   return (
     <Card style={styles.orderItem}>
       <View style={styles.summary}>

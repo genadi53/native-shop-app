@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useReducer, useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
   ScrollView,
@@ -10,6 +11,7 @@ import {
 } from "react-native";
 import { useDispatch } from "react-redux";
 import Input from "../../components/Input";
+import { CustomColors } from "../../constants/customColors";
 import { UserstackNavProps } from "../../navigation/UsersParamList";
 import { createProduct } from "../../store/actions/productActions";
 import { formReducer, FormState, FORM_UPDATE } from "./formReducer";
@@ -35,6 +37,8 @@ const CreateProductScreen = ({
     isFormValid: false,
   };
   const [formState, dispatchFormState] = useReducer(formReducer, initialState);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | undefined>(undefined);
 
   const onSubmit = useCallback(() => {
     if (!formState.isFormValid) {
@@ -44,17 +48,33 @@ const CreateProductScreen = ({
       ]);
       return;
     }
-    dispatch(
-      createProduct(
-        formState.inputValues.title,
-        formState.inputValues.description,
-        formState.inputValues.imageUrl,
-        parseFloat(formState.inputValues.price)
-      )
-    );
+    setIsLoading(true);
+    try {
+      dispatch(
+        createProduct(
+          formState.inputValues.title,
+          formState.inputValues.description,
+          formState.inputValues.imageUrl,
+          parseFloat(formState.inputValues.price)
+        )
+      );
+    } catch (err: any) {
+      setError(err.message);
+    }
 
+    setIsLoading(false);
     navigation.goBack();
   }, [dispatch, formState]);
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An error occurred!", error, [{ text: "Okay" }]);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    navigation.setParams({ submit: onSubmit });
+  }, [onSubmit]);
 
   const textChangeHandler = useCallback(
     (inputIdentifier: string, text: string, inputValidity: boolean) => {
@@ -70,9 +90,11 @@ const CreateProductScreen = ({
     [dispatchFormState]
   );
 
-  useEffect(() => {
-    navigation.setParams({ submit: onSubmit });
-  }, [onSubmit]);
+  if (isLoading) {
+    <View style={styles.screen}>
+      <ActivityIndicator size="large" color={CustomColors.primary} />
+    </View>;
+  }
 
   return (
     <KeyboardAvoidingView
@@ -145,18 +167,10 @@ const styles = StyleSheet.create({
   form: {
     margin: 20,
   },
-  formControl: {
-    width: "100%",
-  },
-  label: {
-    fontFamily: "open-sans-bold",
-    marginVertical: 8,
-  },
-  input: {
-    paddingHorizontal: 2,
-    paddingVertical: 5,
-    borderBottomColor: "#ccc",
-    borderBottomWidth: 1,
+  screen: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
